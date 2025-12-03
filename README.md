@@ -6,11 +6,14 @@ Suhwan Choi*, Jaeyoon Jung*, Haebin Seong*, Minchan Kim, Minyeong Kim, Yongjun C
 
 <img width="5334" height="2306" alt="image" src="https://github.com/user-attachments/assets/5a6dd6a1-201f-4da6-8530-340b5edfa2b1" />
 
-Code is comming soon! `ocap` and `owa` toolkit is being open-sourced already, have a look at these first.
+## News
 
-- https://github.com/open-world-agents/ocap: ocap (Omnimodal CAPture) captures all essential desktop signals in synchronized format. Records screen video, audio, keyboard/mouse input, and window events.
-- https://github.com/open-world-agents/open-world-agents: A versatile and efficient monorepo that embraces and grows multiple projects, containing all the essential building blocks for agent development.
-- https://worv-ai.github.io/d2e/: D2E: Scaling Vision-Action Pretraining on Desktop Data for Transfer to Embodied AI. Code will coming soon!
+- [2025/12/01] We release 480p version of dataset at huggingface. [open-world-agents/D2E-480p](https://huggingface.co/datasets/open-world-agents/D2E-480p): **267 hours** of synchronized video, audio, and input events from **29** PC games across diverse genres (FPS, open-world, sandbox, and more), for training vision-action models and game agents.
+
+- [2025/10/21] We release part of our source codes. Code is comming soon! `ocap` and `owa` toolkit is being open-sourced already, have a look at these first.
+  - https://github.com/open-world-agents/ocap: ocap (Omnimodal CAPture) captures all essential desktop signals in synchronized format. Records screen video, audio, keyboard/mouse input, and window events.
+  - https://github.com/open-world-agents/open-world-agents: A versatile and efficient monorepo that embraces and grows multiple projects, containing all the essential building blocks for agent development.
+  - https://worv-ai.github.io/d2e/: D2E: Scaling Vision-Action Pretraining on Desktop Data for Transfer to Embodied AI. Code will coming soon!
 
 ## Citation
 
