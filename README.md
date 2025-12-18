@@ -22,7 +22,7 @@ If you find this work useful, please cite our paper:
 ```
 @article{choi2025d2e,
   title={D2E: Scaling Vision-Action Pretraining on Desktop Data for Transfer to Embodied AI},
-  author={Choi, Suwhan and Jung, Jaeyoon and Seong, Haebin and Kim, Minchan and Kim, Minyeong and Cho, Yongjun and Kim, Yoonshik and Park, Yubeen and Yu, Youngjae and Lee, Yunsung},
+  author={Choi, Suhwan and Jung, Jaeyoon and Seong, Haebin and Kim, Minchan and Kim, Minyeong and Cho, Yongjun and Kim, Yoonshik and Park, Yubeen and Yu, Youngjae and Lee, Yunsung},
   journal={arXiv preprint arXiv:2510.05684},
   year={2025}
 }
