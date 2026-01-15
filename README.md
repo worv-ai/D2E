@@ -8,6 +8,8 @@ Suhwan Choi*, Jaeyoon Jung*, Haebin Seong*, Minchan Kim, Minyeong Kim, Yongjun C
 
 ## News
 
+- [2026/01/15] We release the Generalist-IDM demo on Hugging Face Spaces [lastdefiance20/Generalist-IDM](https://huggingface.co/spaces/lastdefiance20/Generalist-IDM), the model weights [open-world-agents/Generalist-IDM-1B](https://huggingface.co/open-world-agents/Generalist-IDM-1B), and the inference code [`inference.py`](./inference.py).
+
 - [2025/12/18] We release the FHD/QHD versions of the dataset on Hugging Face [open-world-agents/D2E-Original](https://huggingface.co/datasets/open-world-agents/D2E-Original) for training world models and video generation models. We also fix issues in the 480p dataset [open-world-agents/D2E-480p](https://huggingface.co/datasets/open-world-agents/D2E-480p).
 
 - [2025/12/01] We release 480p version of dataset at huggingface. [open-world-agents/D2E-480p](https://huggingface.co/datasets/open-world-agents/D2E-480p): **267 hours** of synchronized video, audio, and input events from **29** PC games across diverse genres (FPS, open-world, sandbox, and more), for training vision-action models and game agents.
