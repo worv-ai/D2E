@@ -57,7 +57,9 @@ uv run inference.py input_video.mp4 output.mcap --max-duration 30
 
 ### Output Format
 
-The output is an [MCAP](https://mcap.dev/) file containing predicted keyboard and mouse events with timestamps synchronized to the input video. You can visualize and inspect the output using [Foxglove Studio](https://foxglove.dev/studio) or the OWA toolkit.
+The output is an [MCAP](https://mcap.dev/) file containing predicted keyboard and mouse events with timestamps synchronized to the input video. You can visualize the output using the [Dataset Visualizer](https://huggingface.co/spaces/open-world-agents/visualize_dataset).
+
+<img src="https://github.com/open-world-agents/owa-dataset-visualizer/blob/main/.github/assets/viewer.png?raw=true" alt="Dataset Visualizer Preview" width="600">
 
 ## Dataset
 
@@ -112,7 +114,7 @@ with OWAMcapReader(mcap_file) as reader:
 
 ### Visualize
 
-Explore recordings in your browser with synchronized keyboard/mouse overlay: [Open in Dataset Visualizer](https://huggingface.co/spaces/open-world-agents/Dataset-Visualizer)
+Explore recordings in your browser with synchronized keyboard/mouse overlay: [Open in Dataset Visualizer](https://huggingface.co/spaces/open-world-agents/visualize_dataset)
 
 ### For Training
 
