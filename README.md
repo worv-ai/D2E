@@ -19,48 +19,6 @@ Suhwan Choi*, Jaeyoon Jung*, Haebin Seong*, Minchan Kim, Minyeong Kim, Yongjun C
   - https://github.com/open-world-agents/open-world-agents: A versatile and efficient monorepo that embraces and grows multiple projects, containing all the essential building blocks for agent development.
   - https://worv-ai.github.io/d2e/: D2E: Scaling Vision-Action Pretraining on Desktop Data for Transfer to Embodied AI. Code will coming soon!
 
-## Inference
-
-Run action prediction on any gameplay video using [`inference.py`](./inference.py). The script uses [uv](https://docs.astral.sh/uv/) for dependency management—no manual installation required.
-
-### Prerequisites
-
-- [uv](https://docs.astral.sh/uv/)
-- FFmpeg (for video preprocessing)
-- CUDA-capable GPU (recommended, ~8GB+ VRAM)
-
-> ⏱️ **Inference Time**: On H100, processing 1 second of video takes ~6 seconds. For a 1-minute video, expect ~6 minutes of inference time. Use `--max-duration` to limit video length for faster testing.
-
-### Quick Start
-
-```bash
-# Run inference on a video (dependencies are auto-installed by uv)
-uv run inference.py input_video.mp4 output.mcap
-
-# Specify a different model or device
-uv run inference.py input_video.mp4 output.mcap --model open-world-agents/Generalist-IDM-1B
-uv run inference.py input_video.mp4 output.mcap --device cpu
-
-# Limit video duration for faster testing
-uv run inference.py input_video.mp4 output.mcap --max-duration 30
-```
-
-### Options
-
-| Option | Default | Description |
-|--------|---------|-------------|
-| `--model` | `open-world-agents/Generalist-IDM-1B` | Model path or Hugging Face ID |
-| `--device` | `cuda` | Device to run on (`cuda` or `cpu`) |
-| `--max-duration` | None | Max video duration in seconds |
-| `--max-context-length` | 2048 | Max context length for the model |
-| `--time-shift` | 0.1 | Time shift for actions in seconds |
-
-### Output Format
-
-The output is an [MCAP](https://mcap.dev/) file containing predicted keyboard and mouse events with timestamps synchronized to the input video. You can visualize the output using the [Dataset Visualizer](https://huggingface.co/spaces/open-world-agents/visualize_dataset).
-
-<img src="https://github.com/open-world-agents/owa-dataset-visualizer/blob/main/.github/assets/viewer.png?raw=true" alt="Dataset Visualizer Preview" width="600">
-
 ## Dataset
 
 We provide **267 hours** of synchronized video, audio, and input events from **29 PC games** across diverse genres (FPS, open-world, sandbox, and more).
@@ -116,9 +74,51 @@ with OWAMcapReader(mcap_file) as reader:
 
 Explore recordings in your browser with synchronized keyboard/mouse overlay: [Open in Dataset Visualizer](https://huggingface.co/spaces/open-world-agents/visualize_dataset)
 
+<img src="https://github.com/open-world-agents/owa-dataset-visualizer/blob/main/.github/assets/viewer.png?raw=true" alt="Dataset Visualizer Preview" width="600">
+
 ### For Training
 
 We provide [`owa-data`](https://github.com/open-world-agents/open-world-agents/tree/main/projects/owa-data), a data pipeline that converts this dataset into HuggingFace Datasets ready for PyTorch DataLoader with tokenization and sequence packing.
+
+## Inference
+
+Run action prediction on any gameplay video using [`inference.py`](./inference.py). The script uses [uv](https://docs.astral.sh/uv/) for dependency management—no manual installation required.
+
+### Prerequisites
+
+- [uv](https://docs.astral.sh/uv/)
+- FFmpeg (for video preprocessing)
+- CUDA-capable GPU (recommended, ~8GB+ VRAM)
+
+> ⏱️ **Inference Time**: On H100, processing 1 second of video takes ~6 seconds. For a 1-minute video, expect ~6 minutes of inference time. Use `--max-duration` to limit video length for faster testing.
+
+### Quick Start
+
+```bash
+# Run inference on a video (dependencies are auto-installed by uv)
+uv run inference.py input_video.mp4 output.mcap
+
+# Specify a different model or device
+uv run inference.py input_video.mp4 output.mcap --model open-world-agents/Generalist-IDM-1B
+uv run inference.py input_video.mp4 output.mcap --device cpu
+
+# Limit video duration for faster testing
+uv run inference.py input_video.mp4 output.mcap --max-duration 30
+```
+
+### Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--model` | `open-world-agents/Generalist-IDM-1B` | Model path or Hugging Face ID |
+| `--device` | `cuda` | Device to run on (`cuda` or `cpu`) |
+| `--max-duration` | None | Max video duration in seconds |
+| `--max-context-length` | 2048 | Max context length for the model |
+| `--time-shift` | 0.1 | Time shift for actions in seconds |
+
+### Output Format
+
+The output is an [MCAP](https://mcap.dev/) file containing predicted keyboard and mouse events with timestamps synchronized to the input video. You can visualize the output using the [Dataset Visualizer](https://huggingface.co/spaces/open-world-agents/visualize_dataset).
 
 ## Citation
 
