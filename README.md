@@ -2,7 +2,12 @@
 
 Suhwan Choi*, Jaeyoon Jung*, Haebin Seong*, Minchan Kim, Minyeong Kim, Yongjun Cho, Yoonshik Kim, Yubeen Park, Youngjae Yu‡, Yunsung Lee‡
 
-[![project-page](https://img.shields.io/badge/Project%20Page-blue?style=flat-square)](https://worv-ai.github.io/d2e/) [![arXiv](https://img.shields.io/badge/arXiv-2410.01273-brightgreen.svg?style=flat-square)](https://arxiv.org/abs/2510.05684)
+[![Project Page](https://img.shields.io/badge/🌐_Project_Page-blue?style=flat-square)](https://worv-ai.github.io/d2e/)
+[![arXiv](https://img.shields.io/badge/📄_arXiv-2510.05684-red?style=flat-square)](https://arxiv.org/abs/2510.05684)
+[![Demo](https://img.shields.io/badge/🤗_Demo-Generalist--IDM-yellow?style=flat-square)](https://huggingface.co/spaces/lastdefiance20/Generalist-IDM)
+[![Model](https://img.shields.io/badge/🤗_Model-1B-yellow?style=flat-square)](https://huggingface.co/open-world-agents/Generalist-IDM-1B)
+[![Dataset 480p](https://img.shields.io/badge/🤗_Dataset-480p-yellow?style=flat-square)](https://huggingface.co/datasets/open-world-agents/D2E-480p)
+[![Dataset Original](https://img.shields.io/badge/🤗_Dataset-FHD/QHD-yellow?style=flat-square)](https://huggingface.co/datasets/open-world-agents/D2E-Original)
 
 <img width="5334" height="2306" alt="image" src="https://github.com/user-attachments/assets/5a6dd6a1-201f-4da6-8530-340b5edfa2b1" />
 
