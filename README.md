@@ -138,6 +138,8 @@ Existing desktop IDM works(e.g. VPT) each define their own ad-hoc metrics—vary
 | Mouse buttons | **Per-button accuracy** | Exact count match per button type (left/right/middle, down/up) per bin |
 | Keyboard | **Per-key accuracy** | Exact count match per key event type per bin |
 
+Both inputs and outputs use [MCAP](https://mcap.dev/), an open standard for multimodal log data adopted by robotics frameworks such as [Foxglove](https://foxglove.dev/) and [ROS 2](https://docs.ros.org/). `inference.py` accepts a plain video and produces an MCAP, so no prior MCAP knowledge is needed to get started.
+
 ```bash
 # Inference → Evaluation
 uv run inference.py gameplay.mp4 predicted.mcap --max-duration 30
