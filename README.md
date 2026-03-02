@@ -13,6 +13,8 @@ Suhwan Choi*, Jaeyoon Jung*, Haebin Seong*, Minchan Kim, Minyeong Kim, Yongjun C
 
 ## News
 
+- [2026/03/02] We release the evaluation script [`evaluate.py`](./evaluate.py). Existing desktop IDM works each define their own ad-hoc metrics, making fair comparison difficult. We provide a standardized evaluation protocol with well-defined, reproducible metrics (see [Evaluation](#evaluation)).
+
 - [2026/01/15] We release the Generalist-IDM demo on Hugging Face Spaces [lastdefiance20/Generalist-IDM](https://huggingface.co/spaces/lastdefiance20/Generalist-IDM), the model weights [open-world-agents/Generalist-IDM-1B](https://huggingface.co/open-world-agents/Generalist-IDM-1B), and the inference code [`inference.py`](./inference.py).
 
 - [2025/12/18] We release the FHD/QHD versions of the dataset on Hugging Face [open-world-agents/D2E-Original](https://huggingface.co/datasets/open-world-agents/D2E-Original) for training world models and video generation models. We also fix issues in the 480p dataset [open-world-agents/D2E-480p](https://huggingface.co/datasets/open-world-agents/D2E-480p).
@@ -124,6 +126,36 @@ uv run inference.py input_video.mp4 output.mcap --max-duration 30
 ### Output Format
 
 The output is an [MCAP](https://mcap.dev/) file containing predicted keyboard and mouse events with timestamps synchronized to the input video. You can visualize the output using the [Dataset Visualizer](https://huggingface.co/spaces/open-world-agents/visualize_dataset).
+
+## Evaluation
+
+Existing desktop IDM works(e.g. VPT) each define their own ad-hoc metrics—varying bin sizes, inconsistent aggregation, or metrics that conflate movement direction with magnitude—making cross-paper comparison unreliable. We provide [`evaluate.py`](./evaluate.py), a standardized evaluation protocol with clearly defined metrics (paper Section F.2). All metrics are computed over **non-overlapping 50ms temporal bins** (configurable via `--bin-ms`):
+
+| Category | Metric | Description |
+|----------|--------|-------------|
+| Mouse movement | **Pearson correlation (X/Y)** | Direction alignment between predicted and ground truth mouse deltas |
+| Mouse movement | **Scale ratio (X/Y)** | Magnitude consistency (ratio of mean absolute deltas, always ≥1) |
+| Mouse buttons | **Per-button accuracy** | Exact count match per button type (left/right/middle, down/up) per bin |
+| Keyboard | **Per-key accuracy** | Exact count match per key event type per bin |
+
+```bash
+# Inference → Evaluation
+uv run inference.py gameplay.mp4 predicted.mcap --max-duration 30
+uv run evaluate.py ground_truth.mcap predicted.mcap --output results.json
+```
+
+Output example:
+
+```json
+{
+  "summary": { "duration_sec": 30.0, "num_bins": 600 },
+  "mouse_move": { "pearson_x": 0.82, "pearson_y": 0.78, "scale_ratio_x": 1.15, "scale_ratio_y": 1.22 },
+  "mouse_button": { "button_accuracy": 0.91 },
+  "keyboard": { "key_accuracy": 0.85 }
+}
+```
+
+We encourage the community to adopt this protocol for desktop IDM benchmarking—let's make evaluation reproducible.
 
 ## Citation
 
