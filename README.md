@@ -51,12 +51,10 @@ pip install mcap-owa-support owa-msgs huggingface_hub
 from huggingface_hub import hf_hub_download
 from mcap_owa.highlevel import OWAMcapReader
 
-# Download a sample recording
-mcap_file = hf_hub_download(
-    repo_id="open-world-agents/D2E-480p",
-    filename="Apex_Legends/0805_01.mcap",
-    repo_type="dataset"
-)
+# Download a sample recording (mcap + video)
+_kw = dict(repo_id="open-world-agents/D2E-480p", repo_type="dataset")
+hf_hub_download(**_kw, filename="Apex_Legends/0805_01.mkv")
+mcap_file = hf_hub_download(**_kw, filename="Apex_Legends/0805_01.mcap")
 
 with OWAMcapReader(mcap_file) as reader:
     # Load a video frame
