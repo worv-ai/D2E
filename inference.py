@@ -7,15 +7,15 @@
 #     "torchvision",
 #     "transformers>=5.0.0",
 #     "accelerate",
-#     "mcap-owa-support>=0.6.5",
-#     "owa-core>=0.6.5",
-#     "owa-msgs>=0.6.5",
-#     "owa-env-desktop>=0.6.5",
-#     "owa-data @ git+https://github.com/open-world-agents/open-world-agents@8fee481a65c719b8565a674de62966f955e911cf#subdirectory=projects/owa-data",
+#     "mcap-owa-support>=0.6.6",
+#     "owa-core>=0.6.6",
+#     "owa-msgs>=0.6.6",
+#     "owa-env-desktop>=0.6.6",
+#     "owa-data @ git+https://github.com/open-world-agents/open-world-agents@f1dcd4428006dc65ee2cc10da497b6b139113221#subdirectory=projects/owa-data",
 # ]
 #
 # [tool.uv]
-# exclude-newer = "2026-05-08"
+# exclude-newer = "2026-07-16"
 # ///
 """
 Generalist-IDM inference script: extracts actions from video and outputs MCAP.

@@ -4,13 +4,13 @@
 # dependencies = [
 #     "loguru",
 #     "numpy",
-#     "mcap-owa-support>=0.6.5",
-#     "owa-core>=0.6.5",
-#     "owa-msgs>=0.6.5",
+#     "mcap-owa-support>=0.6.6",
+#     "owa-core>=0.6.6",
+#     "owa-msgs>=0.6.6",
 # ]
 #
 # [tool.uv]
-# exclude-newer = "2026-05-08"
+# exclude-newer = "2026-07-16"
 # ///
 """
 G-IDM evaluation script: compare ground truth MCAP with predicted MCAP.
