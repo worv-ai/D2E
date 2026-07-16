@@ -1,20 +1,21 @@
 #!/usr/bin/env -S uv run --script
 # /// script
-# requires-python = ">=3.10"
+# requires-python = ">=3.11"
 # dependencies = [
-#     "loguru==0.7.2",
-#     "torch==2.8.0",
-#     "torchvision==0.23.0",
-#     "transformers==4.57.2",
-#     "accelerate==1.10.1",
-#     "mcap-owa-support @ git+https://github.com/lastdefiance20/open-world-agents.git#subdirectory=projects/mcap-owa-support",
-#     "owa-cli @ git+https://github.com/lastdefiance20/open-world-agents.git#subdirectory=projects/owa-cli",
-#     "owa-core @ git+https://github.com/lastdefiance20/open-world-agents.git#subdirectory=projects/owa-core",
-#     "owa-env-desktop @ git+https://github.com/lastdefiance20/open-world-agents.git#subdirectory=projects/owa-env-desktop",
-#     "owa-env-gst @ git+https://github.com/lastdefiance20/open-world-agents.git#subdirectory=projects/owa-env-gst",
-#     "owa-msgs @ git+https://github.com/lastdefiance20/open-world-agents.git#subdirectory=projects/owa-msgs",
-#     "owa-data @ git+https://github.com/lastdefiance20/open-world-agents.git#subdirectory=projects/owa-data",
+#     "loguru",
+#     "torch>=2.8.0",
+#     "torchvision",
+#     "transformers>=5.0.0",
+#     "accelerate",
+#     "mcap-owa-support>=0.6.5",
+#     "owa-core>=0.6.5",
+#     "owa-msgs>=0.6.5",
+#     "owa-env-desktop>=0.6.5",
+#     "owa-data @ git+https://github.com/open-world-agents/open-world-agents@8fee481a65c719b8565a674de62966f955e911cf#subdirectory=projects/owa-data",
 # ]
+#
+# [tool.uv]
+# exclude-newer = "2026-05-08"
 # ///
 """
 Generalist-IDM inference script: extracts actions from video and outputs MCAP.
@@ -39,8 +40,15 @@ from transformers import AutoModelForImageTextToText, AutoProcessor
 from mcap_owa.highlevel import OWAMcapReader, OWAMcapWriter
 from mcap_owa.highlevel.mcap_msg import McapMessage
 from owa.core import MESSAGES
-from owa.data.encoders import EventEncoderError, FactorizedEventEncoder, HierarchicalEventEncoder
-from owa.data.episode_tokenizer import EpisodeTokenizer, TokenizedEvent
+from owa.data.encoders import EventEncoderError, FactorizedEventEncoder, HierarchicalEventEncoder, create_encoder
+from owa.data.tokenization import (
+    EventTokenizationContext,
+    TokenizedEvent,
+    decode_event,
+    get_image_config,
+    prepare_model_for_events,
+    tokenize_event,
+)
 from owa.data.processing.resampler import EventResamplerDict
 
 MODEL_ID = "open-world-agents/Generalist-IDM-1B"
@@ -155,14 +163,14 @@ class _ContextManager:
         device: str,
         max_context_length: int,
         processor_image_processor,
-        episode_tokenizer: EpisodeTokenizer,
+        tokenization_ctx: EventTokenizationContext,
         callback: Optional[Callable[[McapMessage], None]] = None,
     ):
         self.device = device
         self.callback = callback
         self.max_context_length = max_context_length
         self.processor_image_processor = processor_image_processor
-        self.episode_tokenizer = episode_tokenizer
+        self.tokenization_ctx = tokenization_ctx
         self.sequences = torch.tensor([], dtype=torch.long, device=device)
         self.pixel_values = torch.tensor([], dtype=torch.bfloat16, device=device)
         self.event_indices = torch.tensor([], dtype=torch.long, device=device)
@@ -174,8 +182,8 @@ class _ContextManager:
         return f"Context(seq_len={len(self.sequences)}, images={len(self.pixel_values)}, events={len(self.event_indices)})"
 
     def append_event(self, event: McapMessage, *, dry_run: bool = False, is_timestamp_adjusted: bool = False) -> int:
-        tokenized_event = self.episode_tokenizer.tokenize_event(event)
-        encoder = self.episode_tokenizer.encoder
+        tokenized_event = tokenize_event(self.tokenization_ctx, event)
+        encoder = self.tokenization_ctx.encoder
         if not isinstance(encoder, (HierarchicalEventEncoder, FactorizedEventEncoder)):
             raise NotImplementedError(f"Encoder type {type(encoder)} is not supported.")
         timestamp_range = encoder.config.timestamp_range
@@ -212,7 +220,7 @@ class _ContextManager:
             pil_images = []
             for img in new_images:
                 try:
-                    pil_images.append(img.to_pil_image(keep_av_open=True))
+                    pil_images.append(img.to_pil_image())
                 except Exception as e:
                     from PIL import Image
 
@@ -251,8 +259,13 @@ class InferencePipeline:
         self.model.eval()
         self.processor = AutoProcessor.from_pretrained(config.model_path, trust_remote_code=config.trust_remote_code)
         self.tokenizer = self.processor.tokenizer
-        self.episode_tokenizer = EpisodeTokenizer.from_transformers(config.model_path)
-        self.episode_tokenizer.prepare_model(tokenizer=self.tokenizer, model=self.model)
+        image_config = get_image_config(config.model_path)
+        # NOTE: all published G-IDM checkpoints use factorized encoder
+        encoder = create_encoder("factorized", fake_image_placeholder=image_config.fake_placeholder)
+        prepare_model_for_events(self.tokenizer, encoder, image_config, self.model)
+        self.tokenization_ctx = EventTokenizationContext(
+            encoder=encoder, tokenizer=self.tokenizer, image_config=image_config
+        )
         self._eos_token_id = self.tokenizer.encode("<EVENT_END>")[0]
 
     def _generate_single_event(self, sequences: torch.Tensor, pixel_values: torch.Tensor) -> torch.LongTensor:
@@ -285,7 +298,7 @@ class InferencePipeline:
             device=self.config.device,
             max_context_length=self.config.max_context_length,
             processor_image_processor=self.processor.image_processor,
-            episode_tokenizer=self.episode_tokenizer,
+            tokenization_ctx=self.tokenization_ctx,
             callback=output_event,
         )
         if apply_resampler:
@@ -307,7 +320,7 @@ class InferencePipeline:
                 sequences = context.sequences.unsqueeze(0)
                 new_tokens = self._generate_single_event(sequences, context.pixel_values)
                 try:
-                    generated_event = self.episode_tokenizer.decode_event(new_tokens.cpu().numpy())
+                    generated_event = decode_event(self.tokenization_ctx, new_tokens.cpu().numpy())
                 except EventEncoderError:
                     logger.debug("Generated invalid event, stopping generation for this gap")
                     break

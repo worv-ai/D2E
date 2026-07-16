@@ -1,13 +1,16 @@
 #!/usr/bin/env -S uv run --script
 # /// script
-# requires-python = ">=3.10"
+# requires-python = ">=3.11"
 # dependencies = [
-#     "loguru==0.7.2",
-#     "numpy>=1.24.0",
-#     "mcap-owa-support @ git+https://github.com/lastdefiance20/open-world-agents.git#subdirectory=projects/mcap-owa-support",
-#     "owa-core @ git+https://github.com/lastdefiance20/open-world-agents.git#subdirectory=projects/owa-core",
-#     "owa-msgs @ git+https://github.com/lastdefiance20/open-world-agents.git#subdirectory=projects/owa-msgs",
+#     "loguru",
+#     "numpy",
+#     "mcap-owa-support>=0.6.5",
+#     "owa-core>=0.6.5",
+#     "owa-msgs>=0.6.5",
 # ]
+#
+# [tool.uv]
+# exclude-newer = "2026-05-08"
 # ///
 """
 G-IDM evaluation script: compare ground truth MCAP with predicted MCAP.
