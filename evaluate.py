@@ -1,6 +1,6 @@
 #!/usr/bin/env -S uv run --script
 # /// script
-# requires-python = ">=3.11"
+# requires-python = ">=3.11,<3.15"
 # dependencies = [
 #     "loguru",
 #     "numpy",
@@ -70,7 +70,7 @@ def _determine_event_type(event: McapMessage) -> EventType:
 @dataclass
 class BinningConfig:
     bin_size_ns: int = 50_000_000  # 50ms bins (20Hz)
-    empty_bins_as_correct: bool = False
+    empty_bins_as_correct: bool = True  # paper tables count empty bins as correct
 
 
 class Bin(TypedDict):
@@ -430,8 +430,10 @@ Examples:
     parser.add_argument("--bin-ms", type=int, default=50, help="Bin size in milliseconds (default: 50)")
     parser.add_argument(
         "--empty-bins-as-correct",
-        action="store_true",
-        help="Treat empty bins as correct matches",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Count a bin with no event as correct when the prediction is also empty, as in the paper's tables "
+        "(default). Pass --no-empty-bins-as-correct to score only bins that contain an event.",
     )
     parser.add_argument("--output", "-o", type=str, help="Save JSON output to file")
     parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")

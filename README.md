@@ -136,6 +136,8 @@ Existing desktop IDM works(e.g. VPT) each define their own ad-hoc metrics—vary
 | Mouse buttons | **Per-button accuracy** | Exact count match per button type (left/right/middle, down/up) per bin |
 | Keyboard | **Per-key accuracy** | Exact count match per key event type per bin |
 
+Button and key accuracy count every bin: a bin with no event is correct when the prediction is also empty. This is the setting used for the paper's tables and the default. Pass `--no-empty-bins-as-correct` to score only bins that contain an event.
+
 Both inputs and outputs use [MCAP](https://mcap.dev/), an open standard for multimodal log data adopted by robotics frameworks such as [Foxglove](https://foxglove.dev/) and [ROS 2](https://docs.ros.org/). `inference.py` accepts a plain video and produces an MCAP, so no prior MCAP knowledge is needed to get started.
 
 ```bash
